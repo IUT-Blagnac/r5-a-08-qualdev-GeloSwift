@@ -2,21 +2,57 @@
 :icons: font
 :MoSCoW: https://fr.wikipedia.org/wiki/M%C3%A9thode_MoSCoW[MoSCoW]
 
-Ce dépôt concerne les rendus de mailto:A_changer@etu.univ-tlse2.fr[Jonh Doe].
+Ce dépôt concerne les rendus de mailto:angelo.nichele@etu.univ-tlse2.fr[Angelo Nichele].
 
 == TP1
 
 .Exemple de code
 [source,java]
 ---
-@Given("today is Sunday")
-public void today_is_sunday() {
-    // Write code here that turns the phrase above into concrete actions
-    throw new io.cucumber.java.PendingException();
+@Given("today is {string}")
+    public void today_is(String d) {
+        this.today = d;
+    }
+@When("I ask whether it's Friday yet")
+public void i_ask_whether_it_s_friday_yet() {
+    this.actualAnswer = IsItFriday.isItFriday(today);
+}
+@Then("I should be told {string}")
+public void i_should_be_told(String expectedAnswer) {
+    assertEquals(expectedAnswer, actualAnswer);
 }
 ---
 
-.Exemple d'image insérée en asciidoc
-image::artifacts-r303.svg[width=80%]
+.is_it_friday_yet.feature
+[source,feature]
+---
+Feature: Is it Friday yet?
+    Everybody wants to know when it's Friday
+---
+  Scenario: Sunday isn't Friday
+    Given today is "Sunday"
+    When I ask whether it's Friday yet
+    Then I should be told "Nope"
+---
+  Scenario: Friday is Friday
+    Given today is "Friday"
+    When I ask whether it's Friday yet
+    Then I should be told "TGIF"
+---
+  Scenario Outline: Friday ?
+    Given today is "<day>"
+    When I ask whether it's Friday yet
+    Then I should be told "<answer>"
+---  
+  Examples:
+    | day            | answer |
+    | Friday         | TGIF   |
+    | Sunday         | Nope   |
+    | anything else! | Nope   |
+
+---
+
+.Résultats du TP1
+image::TP1_Resultat.png[width=80%]
 
 == TP2...
